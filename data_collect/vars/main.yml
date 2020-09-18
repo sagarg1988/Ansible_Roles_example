@@ -1,4 +1,4 @@
 ansible_python_interpreter: /usr/bin/python3
 github_user: sagarg1988
-app_name: Data-Collection
+app_name: Ansible_Roles_example
 ansible_ssh_user: ubuntu
