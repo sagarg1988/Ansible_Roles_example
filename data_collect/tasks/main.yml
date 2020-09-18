@@ -1,0 +1,34 @@
+---
+# tasks file for data_collect
+  - debug: msg={{ansible_ssh_user}}
+  - debug: msg="appp_name={{app_name}}"
+
+  - name: clone repo
+    git:
+      repo: 'https://github.com/{{ github_user }}/{{ app_name }}.git'
+      dest: /home/{{ ansible_ssh_user }}/{{ app_name }}
+      update: yes  # Does a git pull if the repo already exists
+      clone: yes
+
+  - name: get Hostname
+    shell: hostname
+    register: hname
+
+  - name: Execute the shell Script
+    shell: bash /home/{{ ansible_ssh_user }}/{{ app_name }}/collect-data.sh
+
+  - name: zip a collect folder
+    shell: sudo tar -zcvf "$(hostname).tar.gz" collect/
+
+  - name: fetch system data of Node
+    fetch:
+      src: "{{ hname.stdout }}.tar.gz"
+#      src: ip-172-31-19-141.tar.gz
+      dest: "/home/{{ansible_ssh_user}}/new_zip/"
+      flat: yes
+
+  - name: cleaning up folders
+    shell: sudo rm -rf collect/
+
+  - name: cleaning up zips
+    shell: sudo rm -rf "{{ hname.stdout }}.tar.gz"

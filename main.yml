@@ -1,0 +1,7 @@
+---
+# This Playbook would deploy the whole mongodb cluster with replication and sharding.
+
+- hosts: localhost
+  become_method: sudo
+  roles:
+  - role: data_collect
